@@ -2,6 +2,8 @@ import { initializeApp } from "firebase/app";
 import { initializeAuth, getReactNativePersistence } from "firebase/auth";
 import Constants from "expo-constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getFirestore, collection, onSnapshot } from "firebase/firestore";
+import { useEffect } from "react";
 
 // add firebase config
 const firebaseConfig = {
@@ -22,3 +24,15 @@ const auth = initializeAuth(app, {
 });
 
 export { auth };
+
+export const db = getFirestore(app);
+
+const vehiclesRef = collection(db, "vehicles");
+
+export const useVehiclesLister = () => {
+  useEffect(() => {
+    return onSnapshot(vehiclesRef, (snapshot) => {
+      console.log(snapshot.docs.map((doc) => doc.data()));
+    });
+  }, []);
+};
