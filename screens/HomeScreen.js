@@ -9,9 +9,11 @@ import {
 } from "react-native";
 import { signOut } from "firebase/auth";
 
-import { auth } from "../config";
+import { auth, usebmw_arabalarListener } from "../config/firebase";
 
 export const HomeScreen = () => {
+  const cars = usebmw_arabalarListener();
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -24,30 +26,16 @@ export const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.adsContainer}>
-        <View style={styles.adContainer}>
-          <Image
-            source={require("../assets/car1.jpg")}
-            style={styles.adImage}
-          />
-          <View style={styles.adInfoContainer}>
-            <Text style={styles.adInfo}>Araba Modeli: M550i</Text>
-            <Text style={styles.adInfo}>Motor Gücü: 600</Text>
-            <Text style={styles.adInfo}>0-100 Hızlanma: 3.3</Text>
+        {cars.map((car, index) => (
+          <View style={styles.adContainer} key={index}>
+            <Image source={{ uri: car.img }} style={styles.adImage} />
+            <View style={styles.adInfoContainer}>
+              <Text style={styles.adInfo}>Araba Modeli: {car.model}</Text>
+              <Text style={styles.adInfo}>Motor Gücü: {car.guc}</Text>
+              <Text style={styles.adInfo}>Motor Tipi: {car.motor_tipi}</Text>
+            </View>
           </View>
-        </View>
-
-        <View style={styles.adContainer}>
-          <Image
-            source={require("../assets/car2.jpg")}
-            style={styles.adImage}
-          />
-          <View style={styles.adInfoContainer}>
-            <Text style={styles.adInfo}>Araba Modeli: 420d</Text>
-            <Text style={styles.adInfo}>Motor Gücü: 190</Text>
-            <Text style={styles.adInfo}>0-100 Hızlanma: 7.5</Text>
-          </View>
-        </View>
-
+        ))}
         <TouchableOpacity style={styles.signOutButton} onPress={handleLogout}>
           <Text style={styles.signOutText}>Çıkış Yap</Text>
         </TouchableOpacity>

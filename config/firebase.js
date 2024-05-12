@@ -1,11 +1,10 @@
 import { initializeApp } from "firebase/app";
 import { initializeAuth, getReactNativePersistence } from "firebase/auth";
+import { getFirestore, collection, onSnapshot } from "firebase/firestore";
 import Constants from "expo-constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getFirestore, collection, onSnapshot } from "firebase/firestore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-// add firebase config
 const firebaseConfig = {
   apiKey: Constants.expoConfig?.extra?.apiKey,
   authDomain: Constants.expoConfig?.extra?.authDomain,
@@ -15,24 +14,35 @@ const firebaseConfig = {
   appId: Constants.expoConfig?.extra?.appId,
 };
 
-// initialize firebase
 const app = initializeApp(firebaseConfig);
 
-// initialize auth; only for native platforms (Android and iOS)
 const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
 
-export { auth };
+const db = getFirestore(app);
 
-export const db = getFirestore(app);
+const carRef = collection(db, "bmw_arabalar");
 
-const vehiclesRef = collection(db, "vehicles");
+const usebmw_arabalarListener = () => {
+  const [bmw_arabalar, setbmw_arabalar] = useState([]);
 
-export const useVehiclesLister = () => {
   useEffect(() => {
-    return onSnapshot(vehiclesRef, (snapshot) => {
-      console.log(snapshot.docs.map((doc) => doc.data()));
+    return onSnapshot(carRef, (snapshot) => {
+      setbmw_arabalar(
+        snapshot.docs.map((doc) => {
+          const data = doc.data();
+          const createdAt = data.createdAt ? data.createdAt.toDate() : null;
+          return {
+            id: doc.id,
+            ...data,
+            createdAt: createdAt,
+          };
+        })
+      );
     });
   }, []);
+  return bmw_arabalar;
 };
+
+export { auth, db, usebmw_arabalarListener };

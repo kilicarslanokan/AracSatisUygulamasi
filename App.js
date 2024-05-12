@@ -3,9 +3,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { RootNavigator } from "./navigation/RootNavigator";
 import { AuthenticatedUserProvider } from "./providers";
-import { useVehiclesLister } from "./config/firebase";
-const app = () => {
-  useVehiclesLister();
+
+const App = () => {
   return (
     <AuthenticatedUserProvider>
       <SafeAreaProvider>
@@ -15,6 +14,4 @@ const app = () => {
   );
 };
 
-export default function App() {
-  useVehiclesLister();
-}
+export default App;
