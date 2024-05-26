@@ -128,6 +128,7 @@ export const SignupScreen = ({ navigation }) => {
     </View>
   );
 };
+export default SignupScreen;
 
 const styles = StyleSheet.create({
   container: {

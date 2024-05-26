@@ -76,6 +76,7 @@ export const ForgotPasswordScreen = ({ navigation }) => {
     </View>
   );
 };
+export default ForgotPasswordScreen;
 
 const styles = StyleSheet.create({
   container: {

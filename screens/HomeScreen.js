@@ -11,7 +11,7 @@ import { signOut } from "firebase/auth";
 
 import { auth, usebmw_arabalarListener } from "../config/firebase";
 
-export const HomeScreen = () => {
+export const HomeScreen = ({ navigation }) => {
   const cars = usebmw_arabalarListener();
   const [currentPage, setCurrentPage] = useState(1);
   const [currentCars, setCurrentCars] = useState([]);
@@ -28,6 +28,7 @@ export const HomeScreen = () => {
     try {
       await signOut(auth);
       console.log("Çıkış işlemi başarılı.");
+      navigation.replace("Login"); // Başarılı çıkış sonrası "Login" ekranına yönlendirin
     } catch (error) {
       console.error("Çıkış işleminde hata oluştu: ", error);
     }
@@ -46,7 +47,9 @@ export const HomeScreen = () => {
       scrollViewRef.current?.scrollTo({ y: 0, animated: true });
     }
   };
-
+  const navigateToDetails = (car) => {
+    navigation.navigate("Details", { car });
+  };
   return (
     <View style={styles.container}>
       <ScrollView
@@ -54,14 +57,16 @@ export const HomeScreen = () => {
         ref={scrollViewRef}
       >
         {currentCars.map((car, index) => (
-          <View style={styles.adContainer} key={index}>
-            <Image source={{ uri: car.img }} style={styles.adImage} />
-            <View style={styles.adInfoContainer}>
-              <Text style={styles.adInfo}>Araba Modeli: {car.model}</Text>
-              <Text style={styles.adInfo}>Motor Gücü: {car.guc}</Text>
-              <Text style={styles.adInfo}>Motor Tipi: {car.motor_tipi}</Text>
+          <TouchableOpacity key={index} onPress={() => navigateToDetails(car)}>
+            <View style={styles.adContainer} key={index}>
+              <Image source={{ uri: car.img }} style={styles.adImage} />
+              <View style={styles.adInfoContainer}>
+                <Text style={styles.adInfo}>Araba Modeli: {car.model}</Text>
+                <Text style={styles.adInfo}>Motor Gücü: {car.guc}</Text>
+                <Text style={styles.adInfo}>Motor Tipi: {car.motor_tipi}</Text>
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
         ))}
         <View style={styles.paginationContainer}>
           <TouchableOpacity
@@ -87,6 +92,7 @@ export const HomeScreen = () => {
     </View>
   );
 };
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
