@@ -28,28 +28,31 @@ export const HomeScreen = ({ navigation }) => {
     try {
       await signOut(auth);
       console.log("Çıkış işlemi başarılı.");
-      navigation.replace("Login"); // Başarılı çıkış sonrası "Login" ekranına yönlendirin
+      navigation.navigate("Login"); // Başarılı çıkış sonrası "Login" ekranına yönlendirin
     } catch (error) {
       console.error("Çıkış işleminde hata oluştu: ", error);
     }
   };
 
-  const handleNextPage = () => {
-    if (currentPage * itemsPerPage < cars.length) {
-      setCurrentPage(currentPage + 1);
-      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-    }
+  const handlePagePress = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
   };
 
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-    }
-  };
   const navigateToDetails = (car) => {
-    navigation.navigate("Details", { car });
+    navigation.navigate("DetailsScreen", { car });
   };
+
+  // Sayfa numaralarını oluşturma
+  const totalPages = Math.ceil(cars.length / itemsPerPage);
+  const visiblePages = [];
+  const startPage = Math.max(currentPage - 1, 1);
+  const endPage = Math.min(currentPage + 1, totalPages);
+
+  for (let i = startPage; i <= endPage; i++) {
+    visiblePages.push(i);
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -69,21 +72,41 @@ export const HomeScreen = ({ navigation }) => {
           </TouchableOpacity>
         ))}
         <View style={styles.paginationContainer}>
-          <TouchableOpacity
-            style={styles.paginationButton}
-            onPress={handlePrevPage}
-            disabled={currentPage === 1}
-          >
-            <Text style={styles.paginationText}>Önceki</Text>
-          </TouchableOpacity>
-          <Text style={styles.paginationText}>{currentPage}</Text>
-          <TouchableOpacity
-            style={styles.paginationButton}
-            onPress={handleNextPage}
-            disabled={currentPage * itemsPerPage >= cars.length}
-          >
-            <Text style={styles.paginationText}>Sonraki</Text>
-          </TouchableOpacity>
+          {startPage > 1 && (
+            <TouchableOpacity
+              style={styles.paginationButton}
+              onPress={() => handlePagePress(startPage - 1)}
+            >
+              <Text style={styles.paginationText}>{startPage - 1}</Text>
+            </TouchableOpacity>
+          )}
+          {visiblePages.map((pageNumber) => (
+            <TouchableOpacity
+              key={pageNumber}
+              style={[
+                styles.paginationButton,
+                currentPage === pageNumber && styles.activePaginationButton,
+              ]}
+              onPress={() => handlePagePress(pageNumber)}
+            >
+              <Text
+                style={[
+                  styles.paginationText,
+                  currentPage === pageNumber && styles.activePaginationText,
+                ]}
+              >
+                {pageNumber}
+              </Text>
+            </TouchableOpacity>
+          ))}
+          {endPage < totalPages && (
+            <TouchableOpacity
+              style={styles.paginationButton}
+              onPress={() => handlePagePress(endPage + 1)}
+            >
+              <Text style={styles.paginationText}>{endPage + 1}</Text>
+            </TouchableOpacity>
+          )}
         </View>
         <TouchableOpacity style={styles.signOutButton} onPress={handleLogout}>
           <Text style={styles.signOutText}>Çıkış Yap</Text>
@@ -92,7 +115,6 @@ export const HomeScreen = ({ navigation }) => {
     </View>
   );
 };
-export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -136,11 +158,17 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
-    marginHorizontal: 10,
+    marginHorizontal: 5,
+  },
+  activePaginationButton: {
+    backgroundColor: "orange", // Change to your preferred color
   },
   paginationText: {
     color: "black",
     fontSize: 16,
+  },
+  activePaginationText: {
+    color: "white", // Change to your preferred color
   },
   signOutButton: {
     alignSelf: "center",
@@ -155,3 +183,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+export default HomeScreen;

@@ -62,7 +62,9 @@ const DetailsScreen = ({ route }) => {
         </View>
         <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Süspansiyon Sistemi:</Text>
-          <Text style={styles.detailValue}>{car.supspansiyon_sistemi}</Text>
+          <Text style={[styles.detailValue, styles.longText]}>
+            {car.supspansiyon_sistemi}
+          </Text>
         </View>
         <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Jant Boyutu:</Text>
@@ -82,11 +84,15 @@ const DetailsScreen = ({ route }) => {
         </View>
         <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Lastik Boyutu:</Text>
-          <Text style={styles.detailValue}>{car.lastik_boyutu}</Text>
+          <Text style={[styles.detailValue, styles.longText]}>
+            {car.lastik_boyutu}
+          </Text>
         </View>
         <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Direksiyon Sistemi:</Text>
-          <Text style={styles.detailValue}>{car.direksiyon_sistemi}</Text>
+          <Text style={[styles.detailValue, styles.longText]}>
+            {car.direksiyon_sistemi}
+          </Text>
         </View>
       </View>
     </ScrollView>
@@ -104,7 +110,7 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 10,
     marginBottom: 20,
-    resizeMode: "cover", // Resmin çerçeveye sığması için eklendi
+    resizeMode: "cover",
   },
   detailsContainer: {
     padding: 10,
@@ -126,6 +132,13 @@ const styles = StyleSheet.create({
   detailValue: {
     fontSize: 16,
     color: "#FFFFFF",
+    flex: 1,
+    flexWrap: "wrap",
+    maxWidth: "60%",
+  },
+  longText: {
+    fontSize: 14,
+    lineHeight: 18,
   },
 });
 

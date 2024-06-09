@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, Alert } from "react-native"; // Alert ekledik
 import { Formik } from "formik";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -24,9 +24,15 @@ export const SignupScreen = ({ navigation }) => {
   const handleSignup = async (values) => {
     const { email, password } = values;
 
-    createUserWithEmailAndPassword(auth, email, password).catch((error) =>
-      setErrorState(error.message)
-    );
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      // Kayıt başarılı olduğunda kullanıcıya bildirim göster
+      Alert.alert("Başarılı", "Kaydınız başarıyla oluşturuldu.", [
+        { text: "Tamam", onPress: () => navigation.navigate("Login") },
+      ]);
+    } catch (error) {
+      setErrorState(error.message);
+    }
   };
 
   return (

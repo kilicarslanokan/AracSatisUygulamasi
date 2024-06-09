@@ -18,7 +18,7 @@ export const LoginScreen = ({ navigation }) => {
     const { email, password } = values;
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigation.replace("Home");
+      navigation.navigate("Home");
     } catch (error) {
       setErrorState(error.message);
     }
@@ -101,13 +101,13 @@ export const LoginScreen = ({ navigation }) => {
             style={styles.borderlessButtonContainer}
             borderless
             title={"Kayıt Ol"}
-            onPress={() => navigation.replace("Register")}
+            onPress={() => navigation.navigate("Signup")}
           />
           <Button
             style={styles.borderlessButtonContainer}
             borderless
             title={"Şifremi Unuttum"}
-            onPress={() => navigation.replace("ForgotPassword")}
+            onPress={() => navigation.navigate("ForgotPassword")}
           />
         </KeyboardAwareScrollView>
       </View>
