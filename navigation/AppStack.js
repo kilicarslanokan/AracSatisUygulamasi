@@ -8,6 +8,7 @@ import DetailsScreen from "../screens/DetailsScreen";
 import CompareScreen from "../screens/CompareScreen";
 import DealerScreen from "../screens/DealerScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import CarComparisonScreen from "../screens/CarComparisonScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -38,6 +39,14 @@ const CompareStack = () => {
       <Stack.Screen
         name="CompareScreen"
         component={CompareScreen}
+        options={{
+          headerShown: false,
+          headerTitleAlign: "center",
+        }}
+      />
+      <Stack.Screen
+        name="CarComparisonScreen"
+        component={CarComparisonScreen}
         options={{
           headerShown: false,
           headerTitleAlign: "center",
